@@ -18,7 +18,7 @@ from .utils import print_exc_coro
 
 if TYPE_CHECKING:
     from fuwa.gateway.intents import IntentsFlags
-    from .command import ApplicationCommand
+    from .abc import ApplicationCommand
 
 
 class CommandFramework:
