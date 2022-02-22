@@ -24,6 +24,7 @@ if TYPE_CHECKING:
     from fuwa_command_framework.option import FilledOptions
     from fuwa_command_framework.models import InteractionInfo
 
+
 logging.basicConfig(level=logging.DEBUG)
 
 intents = IntentsFlags(
