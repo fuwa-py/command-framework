@@ -13,6 +13,9 @@ if TYPE_CHECKING:
 
 
 class ApplicationCommand:
+    def __init_subclass__(cls) -> None:
+        raise NotImplementedError
+    
     async def predicate(
         self,
         interaction_info: InteractionInfo,

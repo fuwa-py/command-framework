@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import sys
 from typing import (
     TYPE_CHECKING,
     List,
@@ -83,6 +84,8 @@ class CommandFramework:
         callback = command.callback(*c_args, **c_kwargs)
         predicate = command.predicate(*c_args, **c_kwargs)
 
+        # callback and predicate take the same arguments
+
         async def _run_coro():
             predicate_result = await predicate
             # if our predicate result is True, run our callback function
@@ -101,7 +104,7 @@ class CommandFramework:
         **c_kwargs
     ):
         wrapped = self._run_command_callback(command, *c_args, **c_kwargs)
-        asyncio.create_task(wrapped, name="luna:command_framework:command-task")
+        asyncio.create_task(wrapped, name="fuwa:command_framework:command-task")
 
     async def setup(self):
         shared_session = aiohttp.ClientSession()
@@ -121,13 +124,15 @@ class CommandFramework:
         try:
             await self.register_commands()
         except Exception as e:
-            print(e.data)
-            exit(1)
+            print(f"Error registering application commands:\n{e.data}", file=sys.stderr)
+            sys.exit(1)
 
         await self.gateway.open_connection(
             gateway_url,
             version=version
-        )
+        ) # if you're opening a gateway connection before passing
+        # the gateway object to the command framework, awesome
+        # don't do it
 
     async def register_commands(self):
         guild_commands = {} # guild_id: List[payloads]
