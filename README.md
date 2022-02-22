@@ -38,7 +38,7 @@ framework = CommandFramework(
 
 @framework.application_command()
 class MyCommand(SlashCommand, name="poggers", description="hello pog", guild_id=00000000):
-    option_1 = Option("hello_world", description="hello world")
+    option_1 = Option("hello_world", description="hello world", option_type=OptType.BOOLEAN)
 
     async def predicate(
         self,
