@@ -12,10 +12,7 @@ if TYPE_CHECKING:
     from .option import FilledOptions
 
 
-class ApplicationCommand:
-    def __init_subclass__(cls) -> None:
-        raise NotImplementedError
-    
+class ApplicationCommand:    
     async def predicate(
         self,
         interaction_info: InteractionInfo,
