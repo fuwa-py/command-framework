@@ -103,7 +103,7 @@ class CommandFramework:
         wrapped = self._run_command_callback(command, *c_args, **c_kwargs)
         asyncio.create_task(wrapped, name="luna:command_framework:command-task")
 
-    async def __setup(self):
+    async def setup(self):
         shared_session = aiohttp.ClientSession()
         self._stored_session = shared_session
 
@@ -124,11 +124,10 @@ class CommandFramework:
             print(e.data)
             exit(1)
 
-        coro = self.gateway.open_connection(
+        await self.gateway.open_connection(
             gateway_url,
             version=version
         )
-        return coro
 
     async def register_commands(self):
         guild_commands = {} # guild_id: List[payloads]
@@ -158,6 +157,5 @@ class CommandFramework:
             await asyncio.sleep(0.1)
 
     def run(self):
-        coro = self.loop.run_until_complete(self.__setup())
-        self.loop.run_until_complete(coro)
+        self.loop.run_until_complete(self.setup())
         self.loop.run_forever()
