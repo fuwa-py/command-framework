@@ -13,16 +13,16 @@ import logging
 from typing import TYPE_CHECKING
 
 from fuwa.gateway.intents import IntentsFlags
-from fuwa_command_framework.framework import CommandFramework
-from fuwa_command_framework.command import SlashCommand, UserCommand, MessageCommand
-from fuwa_command_framework.option import Option
-from fuwa_command_framework.types import ApplicationCommandOptionType as OptType
-from fuwa_command_framework.types import InteractionCallbackType
+from fuwa.commands.framework import CommandFramework
+from fuwa.commands.command import SlashCommand, UserCommand, MessageCommand
+from fuwa.commands.option import Option
+from fuwa.commands.types import ApplicationCommandOptionType as OptType
+from fuwa.commands.types import InteractionCallbackType
 
 if TYPE_CHECKING:
     from fuwa.fhttp.client import HTTPClient
-    from fuwa_command_framework.option import FilledOptions
-    from fuwa_command_framework.models import InteractionInfo
+    from fuwa.commands.option import FilledOptions
+    from fuwa.commands.models import InteractionInfo
 
 
 logging.basicConfig(level=logging.DEBUG)
@@ -70,4 +70,4 @@ class MyCommand(SlashCommand, name="poggers", description="hello pog", guild_id=
 framework.run() # using this method allows you to have peace of mind that the event loop is handled safely
 ```
 
-You may be asking, why does the command framework not use the `fuwa.xyz` namespace. This is due to some quirks while development where some shadowing issues would occur. This may stay like this in the future, or it may be changed.
+~~You may be asking, why does the command framework not use the `fuwa.xyz` namespace. This is due to some quirks while development where some shadowing issues would occur. This may stay like this in the future, or it may be changed.~~

@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import asyncio
 import sys
+import signal
+from contextlib import suppress as suppress_exc
 from typing import (
     TYPE_CHECKING,
     List,
@@ -9,6 +11,7 @@ from typing import (
 )
 
 import aiohttp
+
 from fuwa.fhttp.client import Route
 from fuwa.fhttp.client import HTTPClient
 from fuwa.gateway.connection import GatewayConnection
@@ -146,7 +149,6 @@ class CommandFramework:
             if guild_id is None:
                 # global command
                 payload = command.get_payload()
-                print(payload)
                 global_commands.append(payload)
             else:
                 current_guild_commands = guild_commands.get(guild_id, [])
@@ -164,10 +166,40 @@ class CommandFramework:
             await self.http.bulk_upsert_application_commands(payload, guild_id=guild_id)
             await asyncio.sleep(0.1)
 
+    async def close(self):
+        with suppress_exc(Exception):
+            await self.gateway.close()
+
+        with suppress_exc(Exception):
+            await self.http.close()
+
+        with suppress_exc(Exception):
+            await self._stored_session.close()
+
     def include_wheel(self, wheel: Wheel):
         commands = wheel.commands
         self.commands.extend(commands)
 
     def run(self):
-        self.loop.run_until_complete(self.setup())
-        self.loop.run_forever()
+        # this is pretty much directly taken from discord.py
+        # since it's pretty good
+        loop = self.loop
+
+        try:
+            loop.add_signal_handler(signal.SIGTERM, lambda: loop.stop())
+            loop.add_signal_handler(signal.SIGINT, lambda: loop.stop())
+        except NotImplementedError:
+            pass
+        
+        setup_coro = self.setup()
+        close_coro = self.close()
+
+        loop.run_until_complete(setup_coro)
+        
+        try:
+            loop.run_forever()
+        except KeyboardInterrupt:
+            loop.run_until_complete(close_coro) # a bit weird
+            # but we want to make sure our closes get called
+
+            loop.stop()
