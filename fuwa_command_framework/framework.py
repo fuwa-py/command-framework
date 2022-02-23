@@ -19,7 +19,9 @@ from .utils import print_exc_coro
 
 if TYPE_CHECKING:
     from fuwa.gateway.intents import IntentsFlags
+
     from .abc import ApplicationCommand
+    from .wheel import Wheel
 
 
 class CommandFramework:
@@ -160,6 +162,10 @@ class CommandFramework:
         for guild_id, payload in guild_commands.items():
             await self.http.bulk_upsert_application_commands(payload, guild_id=guild_id)
             await asyncio.sleep(0.1)
+
+    def include_wheel(self, wheel: Wheel):
+        commands = wheel.commands
+        self.commands.extend(commands)
 
     def run(self):
         self.loop.run_until_complete(self.setup())
