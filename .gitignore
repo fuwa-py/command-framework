@@ -6,3 +6,4 @@ tests.py
 *.egg-info/
 dist/
 build/
+testwheels/

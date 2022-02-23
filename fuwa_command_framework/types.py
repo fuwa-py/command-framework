@@ -1,9 +1,11 @@
-class ApplicationCommandType:
+from enum import IntEnum
+
+class ApplicationCommandType(IntEnum):
     CHAT_INPUT  = 1
     USER        = 2
     MESSAGE     = 3
 
-class ApplicationCommandOptionType:
+class ApplicationCommandOptionType(IntEnum):
     SUB_COMMAND         = 1
     SUB_COMMAND_GROUP   = 2
     STRING              = 3
@@ -16,7 +18,7 @@ class ApplicationCommandOptionType:
     NUMBER              = 10
     ATTACHMENT          = 11
 
-class ChannelType:
+class ChannelType(IntEnum):
     GUILD_TEXT              = 0
     DM                      = 1
     GUILD_VOICE             = 2
@@ -29,7 +31,7 @@ class ChannelType:
     GUILD_PRIVATE_THREAD    = 12
     GUILD_STAGE_VOICE       = 13
 
-class InteractionCallbackType:
+class InteractionCallbackType(IntEnum):
     PONG                                    = 1
     CHANNEL_MESSAGE_WITH_SOURCE             = 4
     DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE    = 5

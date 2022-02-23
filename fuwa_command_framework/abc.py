@@ -1,7 +1,11 @@
 from __future__ import annotations
 
 import inspect
-from typing import TYPE_CHECKING
+from typing import (
+    TYPE_CHECKING,
+    get_type_hints,
+    Literal
+)
 
 from .option import ApplicationCommandOption
 
@@ -36,8 +40,28 @@ class ApplicationCommand:
         # This method is called when loading commands
         # This means the _options value isn't filled till runtime
 
-        for _, value in inspect.getmembers(self):
+        option_annotations = get_type_hints(self.__class__)
+
+        for attr_name, value in inspect.getmembers(self):
             if isinstance(value, ApplicationCommandOption):
+                
+                # check if an annotation exists for this option
+                # if it exists, only process it if its a Literal annotation
+
+                if attr_name in option_annotations:
+                    # Okay, we know its annotated, is it Literal?
+                    annotation = option_annotations[attr_name]
+                    origin = getattr(annotation, "__origin__", None)
+
+                    if origin is Literal:
+                        choices = annotation.__args__
+                        for choice in choices:
+                            choice_payload = {
+                                "name": choice,
+                                "value": choice
+                            }
+                            value.choices.append(choice_payload)
+
                 self._options.append(value)
 
     def get_payload(self):

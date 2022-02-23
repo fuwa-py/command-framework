@@ -1,7 +1,5 @@
 from inspect import getattr_static
 from typing import (
-    Any,
-    Dict,
     Union,
     List,
     Optional
@@ -25,12 +23,15 @@ class ApplicationCommandOption:
         self.description = description
         self.option_type = option_type
 
+        self.choices: List[str] = []
+
     def get_payload(self):
         option_payload = {
             "name": self.name,
             "description": self.description,
             "type": self.option_type,
-            "required": self.required
+            "required": self.required,
+            "choices": self.choices
         }
         return option_payload
 

@@ -146,6 +146,7 @@ class CommandFramework:
             if guild_id is None:
                 # global command
                 payload = command.get_payload()
+                print(payload)
                 global_commands.append(payload)
             else:
                 current_guild_commands = guild_commands.get(guild_id, [])
